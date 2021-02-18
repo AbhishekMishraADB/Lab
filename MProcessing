@@ -1,0 +1,54 @@
+import time
+import threading
+import multiprocessing as mp
+from multiprocessing import Pool
+
+totalTask = 0
+
+
+def fn(i, queue):
+    print("Producing{0}".format(i))
+    queue.put(i)
+    #return queue
+
+
+def call_back(queue):
+    print("In callback")
+    print(queue.get())
+    print("call back done")
+
+
+def consumer(queue):
+    print("In consumer")
+    print(totalTask)
+    total = 0
+    while True:
+        print("Printing Queue")
+        total += 1
+        print(queue.get())
+        if total >= totalTask:
+            print("Breaking")
+            break
+
+
+def main():
+    pool = Pool()
+    arglist = [1, 2, 3, 4, 5]
+    global totalTask
+    totalTask = len(arglist)
+
+    q = mp.Manager().Queue()
+    threading.Thread(target=consumer, args=(q,), daemon=True).start()
+    for x in arglist:
+        results = pool.apply_async(fn, args=(x, q))
+    results.get()
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
