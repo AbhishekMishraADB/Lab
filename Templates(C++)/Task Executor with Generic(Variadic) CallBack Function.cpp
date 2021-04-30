@@ -40,7 +40,7 @@ decltype(auto) create(T&& args)
     return B(forward<T>(args));
 }
 
-//-----------Template Declarations.
+//-----------Task Executor template declarations.
 template<typename ...U>
 void (*fn)(U&& ...args);
 
